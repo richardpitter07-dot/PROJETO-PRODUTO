@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>loja calistenica</title>
+<style>
+:root{--bg:#080B16;--card:#111827;--blue:#1677FF;--orange:#FF9B54;--white:#f5f6f8;--muted:#aab3c2;--border:#263247}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+.wrap{width:min(1100px,92%);margin:auto}
+header{background:#0c1220;border-bottom:1px solid var(--border)}
+nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-weight:900;letter-spacing:1px;font-size:18px}
+.logo span{color:var(--blue)}
+nav a{font-size:14px;color:#d4d9e2;margin-left:18px}
+nav a:hover{color:var(--orange)}
+.cart-button{background:var(--blue);color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:bold}
+.hero{padding:52px 0 42px}
+.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:0 0 14px}
+.hero h1 span{color:var(--blue)}
+.hero p{color:var(--muted);max-width:560px;line-height:1.6}
+.primary{display:inline-block;background:var(--blue);color:white;padding:12px 18px;border-radius:7px;font-weight:bold;margin-top:10px}
+h2{font-size:27px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+.carousel-area{padding:12px 0 36px}
+.carousel{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory}
+.carousel::-webkit-scrollbar{height:7px}
+.carousel::-webkit-scrollbar-thumb{background:#34435d;border-radius:10px}
+.slide{flex:0 0 230px;background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden;scroll-snap-align:start}
+.slide img{width:100%;height:150px;object-fit:contain;background:#f1f2f4;padding:12px}
+.slide div{padding:12px;font-weight:bold}
+.catalog{padding:25px 0 60px}
+.tools{display:flex;gap:10px;margin:18px 0 20px}
+.tools input,.tools select{background:#111827;border:1px solid var(--border);border-radius:7px;color:white;padding:11px}
+.tools input{flex:1;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.product{background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.product img{width:100%;height:205px;object-fit:contain;background:#f1f2f4;padding:14px}
+.info{padding:14px}
+.info h3{margin:0 0 8px;font-size:17px}
+.info p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.45;min-height:38px}
+.price{font-size:20px;font-weight:bold;margin-bottom:12px}
+.add{width:100%;padding:11px;border:0;border-radius:7px;background:var(--blue);color:white;font-weight:bold}
+.add:hover,.primary:hover,.cart-button:hover{background:#075ed4}
+footer{border-top:1px solid var(--border);padding:22px 0;color:var(--muted);font-size:12px}
+footer .wrap{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.shade{display:none;position:fixed;inset:0;background:#0009;z-index:5}
+.shade.open{display:block}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(390px,100%);background:#101827;z-index:6;padding:20px;display:flex;flex-direction:column;transform:translateX(105%);transition:transform .2s}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px}
+.drawer-head h2{font-size:22px}
+.close{background:none;border:1px solid var(--border);color:white;border-radius:6px;padding:6px 10px}
+.items{overflow:auto;flex:1}
+.item{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.item img{width:62px;height:62px;object-fit:contain;background:white;border-radius:6px}
+.item strong{font-size:13px}
+.item small{display:block;color:var(--muted);margin:5px 0}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{background:#263247;color:white;border:0;border-radius:4px;width:24px;height:24px}
+.remove{border:0;background:none;color:var(--orange);font-size:12px;margin-left:8px}
+.summary{border-top:1px solid var(--border);padding-top:14px}
+.summary p{display:flex;justify-content:space-between}
+.finish{width:100%;padding:13px;background:var(--orange);color:#17110d;border:0;border-radius:7px;font-weight:bold}
+.note{font-size:11px;color:var(--muted);line-height:1.4;text-align:center}
+.modal{display:none;position:fixed;inset:0;background:#000c;z-index:10;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.modal-box{width:min(470px,100%);background:#101827;border-radius:10px;overflow:hidden;position:relative;text-align:center}
+.modal-box img{width:100%;display:block;max-height:62vh;object-fit:contain;background:#080B16}
+.modal-text{padding:15px}
+.modal-text p{color:var(--muted);font-size:13px;line-height:1.5}
+.modal-text button{background:var(--blue);color:white;border:0;border-radius:7px;padding:11px 18px;font-weight:bold}
+.modal-close{position:absolute;right:10px;top:10px;background:#080B16;color:white;border:1px solid #ffffff55;border-radius:6px;padding:6px 10px}
+.checkout-box{width:min(470px,100%);background:#101827;border:1px solid var(--border);border-radius:10px;padding:22px;text-align:left;max-height:90vh;overflow:auto}
+.checkout-box h2{margin:0 0 6px;text-align:center}
+.checkout-box .sub{margin-bottom:18px;text-align:center}
+.checkout-form{display:grid;gap:12px}
+.checkout-form label{display:grid;gap:6px;color:#dce3ee;font-size:13px;font-weight:bold}
+.checkout-form input{width:100%;background:#080B16;border:1px solid var(--border);border-radius:7px;padding:12px;color:white;outline:none}
+.checkout-form input:focus{border-color:var(--blue)}
+.checkout-actions{display:flex;gap:10px;margin-top:5px}
+.checkout-actions button{flex:1;padding:12px;border-radius:7px;font-weight:bold}
+.checkout-cancel{background:transparent;color:white;border:1px solid var(--border)}
+.checkout-submit{background:var(--blue);color:white;border:0}
+
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}nav .links{display:none}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.product img{height:230px}.hero{padding-top:38px}.tools{flex-direction:column}.tools select{width:100%}.slide{flex-basis:78%}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><nav>
+ <a class="logo" href="#inicio">loja <span>calistenica</span></a>
+ <div class="links"><a href="#inicio">Início</a><a href="#destaques">Destaques</a><a href="#produtos">Produtos</a></div>
+ <button class="cart-button" id="openCart">Carrinho (<span id="count">0</span>)</button>
+</nav></div></header>
+<main>
+<section class="hero wrap" id="inicio">
+ <h1>Equipamentos para<br><span>treinar do seu jeito.</span></h1>
+ <p>Encontre acessórios para montar seu espaço de calistenia em casa e evoluir no seu ritmo.</p>
+ <a class="primary" href="#produtos">Ver equipamentos</a>
+</section>
+<section class="carousel-area wrap" id="destaques">
+ <h2>Produtos em destaque</h2><p class="sub">Deslize para ver os equipamentos.</p>
+ <div class="carousel" id="carousel"></div>
+</section>
+<section class="catalog wrap" id="produtos">
+ <h2>Todos os produtos</h2><p class="sub">Escolha os equipamentos para o seu treino.</p>
+ <div class="tools"><input id="search" type="search" placeholder="Buscar produto..."><select id="sort"><option value="normal">Ordenar produtos</option><option value="low">Menor preço</option><option value="high">Maior preço</option></select></div>
+ <div class="grid" id="grid"></div>
+</section>
+</main>
+<footer><div class="wrap"><span>LOJA VIRTUAL 2026</span><span>Projeto escolar AURA 9999</span></div></footer>
+
+<div class="shade" id="shade"></div>
+<aside class="drawer" id="drawer">
+ <div class="drawer-head"><h2>Meu carrinho</h2><button class="close" id="closeCart">Fechar</button></div>
+ <div class="items" id="items"></div>
+ <div class="summary"><p><span>Subtotal</span><strong id="subtotal">R$ 0,00</strong></p><p><span>Total</span><strong id="total">R$ 0,00</strong></p><button class="finish" id="finish">Finalizar compra</button><p class="note">Compra simulada para apresentação escolar. Nenhum pagamento será realizado.</p></div>
+</aside>
+<div class="modal" id="checkoutModal">
+ <div class="checkout-box">
+  <h2>Finalizar compra</h2>
+  <p class="sub">ADCIONA SEUS DADO CERTO PORFAVOZINHO😁 </p>
+  <form class="checkout-form" id="checkoutForm">
+   <label>Nome completo
+    <input type="text" name="name" autocomplete="name" placeholder="Digite seu nome" required minlength="3">
+   </label>
+   <label>E-mail
+    <input type="email" name="email" autocomplete="email" placeholder="seuemail@exemplo.com" required>
+   </label>
+   <label>Telefone
+    <input type="tel" name="phone" autocomplete="tel" placeholder="(00) 00000-0000" required inputmode="tel" pattern="[0-9() +.-]{10,20}" title="Digite um telefone válido">
+   </label>
+   <label>CPF
+    <input type="text" 
+           id="cpf" 
+           name="cpf" 
+           placeholder="000.000.000-00" 
+           required 
+           inputmode="numeric" 
+           maxlength="14" 
+           pattern="\d{3}\.?\d{3}\.?\d{3}-?\d{2}" 
+           title="Digite o CPF no formato 000.000.000-00">
+</label>
+
+<script>
+    const inputCpf = document.getElementById('cpf');
+
+    inputCpf.addEventListener('input', function(e) {
+        let valor = e.target.value;
+        
+        // Remove tudo o que não for número
+        valor = valor.replace(/\D/g, "");
+        
+        // Adiciona os pontos e o traço automaticamente
+        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+        valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+        valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        
+        e.target.value = valor;
+    });
+</script>
+
+   <div class="checkout-actions">
+    <button type="button" class="checkout-cancel" id="cancelCheckout">Voltar</button>
+    <button type="submit" class="checkout-submit">Confirmar pedido</button>
+   </div>
+  </form>
+  <p class="note" style="margin-top:14px"></p>
+ </div>
+</div>
+<div class="modal" id="modal"><div class="modal-box">
+ <button class="modal-close" id="modalClose">×</button>
+ <div class="modal-text"><h2>Pedido confirmado!</h2><p>kkkkkk otario caiu no golpe do urubu do PIX.</p><button id="back">Voltar à loja</button></div>
+</div></div>
+<script>
+const products=[
+{id:1,name:"Barras paralelas",price:149.90,desc:"Par de barras para flexões, apoio e exercícios de calistenia.",img:"https://ca.repfitness.com/cdn/shop/files/Parallete-thumbnail.jpg?v=1769038540"},
+{id:2,name:"Barra fixa de pressão",price:89.90,desc:"Barra reta telescópica que se ajusta por rotação no batente da porta.",img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9JEs9VdqrHPoOXVdaojtYO9JAJgtWk1CKk3jA3QUr4A&s=10"},
+{id:3,name:"Halter de 10 kg",price:119.90,desc:"Halter individual para complementar o treino de força.",img:"https://contents.mediadecathlon.com/m22022213/k%2418e5d7b0e5afcb94f9c66b61c746d22a/round-dumbbell-10-kg-1-pair-homefittools-homefittools-0c731313-d4db-47e4-b8b0-a32baad3afc9.jpg"},
+{id:4,name:"Protetor de pulso",price:39.90,desc:"Munhequeira para dar suporte aos punhos durante o treino.",img:"https://berzerkstrength.com/cdn/shop/products/36_-wrist-wraps-main-photo_1024x1024.jpg?v=1672433885"},
+{id:5,name:"Elásticos de resistência",price:49.90,desc:"Kit de faixas elásticas para exercícios e assistência.",img:"https://rehabshoppen.se/cdn/shop/files/motstandsband_1.jpg?v=1739962220&width=810"}
+];
+const cart={};const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const fallback="https://placehold.co/500x350/f1f2f4/172033?text=Foto+do+produto";
+function imgTag(p){return `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'">`}
+function render(){
+ let list=[...products],q=document.getElementById("search").value.toLowerCase().trim(),sort=document.getElementById("sort").value;
+ list=list.filter(p=>(p.name+" "+p.desc).toLowerCase().includes(q));
+ if(sort==="low")list.sort((a,b)=>a.price-b.price);if(sort==="high")list.sort((a,b)=>b.price-a.price);
+ document.getElementById("grid").innerHTML=list.length?list.map(p=>`<article class="product">${imgTag(p)}<div class="info"><h3>${p.name}</h3><p>${p.desc}</p><div class="price">${money(p.price)}</div><button class="add" onclick="add(${p.id})">Adicionar ao carrinho</button></div></article>`).join():'<p>Nenhum produto encontrado.</p>';
+}
+document.getElementById("carousel").innerHTML=products.map(p=>`<article class="slide">${imgTag(p)}<div>${p.name}</div></article>`).join("");
+function add(id){cart[id]=(cart[id]||0)+1;update();openDrawer()}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];update()}
+function update(){
+ let count=0,total=0,html="";
+ Object.entries(cart).forEach(([id,qty])=>{let p=products.find(x=>x.id==id);count+=qty;total+=p.price*qty;html+=`<div class="item">${imgTag(p)}<div><strong>${p.name}</strong><small>${money(p.price)} cada</small><div class="qty"><button onclick="change(${p.id},-1)">−</button><span>${qty}</span><button onclick="change(${p.id},1)">+</button><button class="remove" onclick="change(${p.id},-${qty})">Remover</button></div></div></div>`});
+ document.getElementById("count").textContent=count;document.getElementById("items").innerHTML=html||'<p class="sub">Seu carrinho está vazio.</p>';document.getElementById("subtotal").textContent=money(total);document.getElementById("total").textContent=money(total);document.getElementById("finish").disabled=!count;
+}
+function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("shade").classList.add("open")}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("shade").classList.remove("open")}
+document.getElementById("openCart").onclick=openDrawer;document.getElementById("closeCart").onclick=closeDrawer;document.getElementById("shade").onclick=closeDrawer;
+document.getElementById("search").addEventListener("input",render);document.getElementById("sort").addEventListener("change",render);
+document.getElementById("finish").onclick=()=>{if(!Object.keys(cart).length)return;closeDrawer();document.getElementById("checkoutModal").classList.add("open")};
+document.getElementById("cancelCheckout").onclick=()=>document.getElementById("checkoutModal").classList.remove("open");
+document.getElementById("checkoutForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(!e.currentTarget.reportValidity())return;
+ document.getElementById("checkoutModal").classList.remove("open");
+ document.getElementById("modal").classList.add("open");
+});
+function closeModal(){document.getElementById("modal").classList.remove("open")}
+document.getElementById("modalClose").onclick=closeModal;
+document.getElementById("back").onclick=()=>{Object.keys(cart).forEach(k=>delete cart[k]);update();closeModal();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+render();update();
+</script>
+</body>
+</html>
